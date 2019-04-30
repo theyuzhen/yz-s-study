@@ -1,0 +1,58 @@
+#include<iostream>
+#include<vector>
+#include<algorithm>
+#include<iterator>
+using namespace std;
+
+int main(int argc, const char*argv[])
+
+{
+	const int size = 6;
+	int array[size] = { 1, 2, 3, 4, 5, 6 };
+	//声明一个int类类型集合的容器，用数组a进行初始化
+	vector<int>v(array, array + size);//v里面为1,2,3,4,5,6,
+	cout << "first element:" << v.front() << "\nlast element" << v.back() << endl;//输出第一个和最后一个元素
+
+
+	v[1] = 7;//调用下标重载另外赋值为7，不会抛出异常
+	v.at(2) = 10;//at会检查下标是否越界，此时2没有越界。
+
+	v.insert(v.begin() + 1, 22);//第一个是要插入的位置，第二个是要插入的值，即第二个位置插入22.
+
+	v.push_back(19);//尾部添加元素19，此时元素为8个:v:1,22,7,10,4,5,6,19
+	//声明一个迭代器（必须vector<int>::iterator),迭代器相当于指针，遍历
+	vector<int>::iterator iter;
+	iter = v.begin();//迭代器指向容器中第一元素的位置
+	while (iter != v.end())//v.end()指向最后一个元素的下一个位置。
+	{
+		cout << *iter << endl;//类似指针解引运算符（得到每一个元素，）
+		iter++;//迭代器向后移动，往后指一位
+	}
+	iter = find(v.begin(), v.end(), 22);//find来自于算法的头文件，用来查找容器里面的元素，从头到尾查22，得到迭代器指向22，查不到便指向最后一个元素的下一个位置v.end();
+	if (iter != v.end())//查到了
+	{
+		cout << "location:" << (iter - v.begin()) << endl;//得到查到的位置，相当于指针在做减法运算
+	}
+	else{
+		cout << "not found" << endl;
+	}
+	cout << v.max_size() << endl;//这个容器能够分配的最大空间，和此计算机内存有关
+	cout << v.capacity() << endl;//当前容量，不一定是8，和此容器内部扩张机制有关
+	try{
+		v.at(100) = 777;//越界，抛异常，把1改为100会有异常
+	}
+	catch (out_of_range&e)//超出范围的异常对象
+	{
+		cout << "expection     " << e.what()<<endl;//输出此异常
+	}
+	v.erase(v.begin());//清除第一个元素
+	v.erase(v.begin(), v.end());//清除此范围所有元素
+
+	cout << "after erase,v" << (v.empty() ? "   is" : "   is not") << "   empty" << endl;//三步运算符
+	//从开始位置把数组插入容器中
+	v.insert(v.begin(), array, array + size);
+	cout << "after insert,v" << (v.empty() ? "  is" : "   is not") << "   empty" << endl;
+	v.clear();//清空容器
+	cout << "after clear,v" << (v.empty() ? "   is" : "   is not") << "    empty" << endl;
+	return 0;
+}
